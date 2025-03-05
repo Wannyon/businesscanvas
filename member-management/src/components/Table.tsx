@@ -11,6 +11,7 @@ import FilterDropdown from '../pages/FilterDropdown.tsx';
 const Table = () => {
   const { records } = useRecordStore();
   const [selected, setSelected] = useState<number[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   // 전체 선택/해제 핸들러
   const handleSelectAll = () => {
@@ -27,6 +28,12 @@ const Table = () => {
     setSelected((check) =>
       check.includes(id) ? check.filter((item) => item !== id) : [...check, id],
     );
+  };
+
+  // 필터 드롭다운 열기
+  const toggleFilter = (fieldKey: string) => {
+    setActiveFilter(activeFilter === fieldKey ? null : fieldKey);
+    console.log('filedKey:', fieldKey);
   };
 
   return (
@@ -51,19 +58,24 @@ const Table = () => {
               />
             </th>
             {fieldsMetadata.map((field) => (
-              <TableHeadCell key={field.key}>
+              <TableHeadCell
+                key={field.key}
+                onClick={() => toggleFilter(field.key)}
+              >
                 <TableHeadText>
                   {field.label}
                   <FilterIcon>
                     <FilterAlt sx={{ fontSize: 12, color: 'gray' }} />
                   </FilterIcon>
-                  <FilterDropdown
-                    options={[
-                      ...new Set(
-                        records.map((data) => String(data[field.key])),
-                      ),
-                    ]}
-                  />
+                  {activeFilter === field.key && (
+                    <FilterDropdown
+                      options={[
+                        ...new Set(
+                          records.map((data) => String(data[field.key])),
+                        ),
+                      ]}
+                    />
+                  )}
                 </TableHeadText>
               </TableHeadCell>
             ))}
