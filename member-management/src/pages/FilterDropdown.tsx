@@ -41,21 +41,32 @@ const FilterDropdown = ({
   }, [options, selectedFilter]);
 
   return (
-    <DropdownContainer className=".filter-drop">
-      <div>
-        {options.map((option) => (
-          <OptionLabel key={option} style={{ display: 'flex' }}>
+    <DropdownContainer>
+      {options.map((option) => {
+        const isSelected = selectedFilter.includes(option);
+        const isDisabled = !option; // 빈 값이면 Disabled
+
+        return (
+          <OptionLabel
+            key={option}
+            $selected={isSelected}
+            $disabled={isDisabled}
+            onClick={() => {
+              if (!isDisabled) {
+                handleFilterChange(option);
+              }
+            }}
+          >
             <Checkbox
               type="checkbox"
-              checked={selectedFilter.includes(option)}
-              onChange={() => {
-                handleFilterChange(option);
-              }}
+              checked={isSelected}
+              disabled={isDisabled} // 비활성화 적용
+              onChange={() => handleFilterChange(option)}
             />
-            {option}
+            {option || 'Disabled'}
           </OptionLabel>
-        ))}
-      </div>
+        );
+      })}
     </DropdownContainer>
   );
 };
@@ -83,12 +94,16 @@ const DropdownContainer = styled.div`
   }
 `;
 
-const OptionLabel = styled.label`
+const OptionLabel = styled.label<{ $selected: boolean; $disabled?: boolean }>`
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 5px 8px;
-  cursor: pointer;
+  border-radius: 6px;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+  background: ${({ $selected }) => ($selected ? '#F0F7FF' : 'transparent')};
+  color: ${({ $disabled }) => ($disabled ? '#aaa' : '#333')};
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
 
   &:hover {
     background: #eaeaea;
