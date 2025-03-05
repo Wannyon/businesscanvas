@@ -67,6 +67,7 @@ const Table = () => {
 
   useEffect(() => {
     console.log('filters 상태 업데이트:', filters);
+    console.log('activeFilter:', activeFilter);
   }, [filters]);
 
   return (
@@ -237,8 +238,14 @@ const TableHead = styled.thead`
 
 // 테이블 헤더 셀
 const TableHeadCell = styled.th`
+  position: relative;
   white-space: nowrap;
   padding: 8px 0;
+
+  &:hover {
+    background-color: #00000005;
+    transition: background-color 0.2s ease-in-out;
+  }
 `;
 
 // 테이블 헤더 셀 텍스트

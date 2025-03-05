@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 interface FilterDropdownProps {
   fieldKey: string;
@@ -40,11 +41,11 @@ const FilterDropdown = ({
   }, [options, selectedFilter]);
 
   return (
-    <div>
+    <DropdownContainer className=".filter-drop">
       <div>
         {options.map((option) => (
-          <label key={option} style={{ display: 'flex' }}>
-            <input
+          <OptionLabel key={option} style={{ display: 'flex' }}>
+            <Checkbox
               type="checkbox"
               checked={selectedFilter.includes(option)}
               onChange={() => {
@@ -52,11 +53,71 @@ const FilterDropdown = ({
               }}
             />
             {option}
-          </label>
+          </OptionLabel>
         ))}
       </div>
-    </div>
+    </DropdownContainer>
   );
 };
 
 export default FilterDropdown;
+
+const DropdownContainer = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 8px;
+  z-index: 10;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const OptionLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: #eaeaea;
+    transition: background 0.2s ease-in-out;
+    border-radius: 6px;
+  }
+`;
+
+const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  appearance: none;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  background: white;
+
+  &:checked {
+    background: #4a7cfe;
+    border: 1px solid #4a7cfe;
+    position: relative;
+  }
+
+  &:checked::after {
+    content: '✔';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
