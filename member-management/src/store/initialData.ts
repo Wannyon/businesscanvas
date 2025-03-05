@@ -41,4 +41,13 @@ export const initialData: Record[] = isLocalStorage
         job: '개발자' as JobType,
         emailConsent: false,
       },
+      {
+        id: 5,
+        name: '은석',
+        address: '',
+        memo: '',
+        joinedAt: '2025-01-01',
+        job: '개발자' as JobType,
+        emailConsent: false,
+      },
     ];
