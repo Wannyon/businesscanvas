@@ -66,23 +66,28 @@ const DropdownContainer = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
+  width: 100%;
+  margin-top: 5px;
   background: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 -2px 4px rgba(0, 0, 0, 0.05),
+    0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
-  padding: 8px;
   z-index: 10;
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    box-shadow:
+      0 -2px 4px rgba(0, 0, 0, 0.05),
+      0 6px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const OptionLabel = styled.label`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
+  gap: 6px;
+  padding: 5px 8px;
   cursor: pointer;
 
   &:hover {
