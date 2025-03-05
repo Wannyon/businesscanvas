@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@mui/material';
 import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
 
 import { useRecordStore } from '../store/useRecordStore.ts';
-import { fieldsMetadata } from '../types/recode.ts';
+import { fieldsMetadata, Record } from '../types/recode.ts';
 
-import FilterDropdown from '../pages/FilterDropdown.tsx';
+import FilterDropdown from '../pages/FilterDropdown';
 
 const Table = () => {
   const { records } = useRecordStore();
-  const [selected, setSelected] = useState<number[]>([]);
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [selected, setSelected] = useState<number[]>([]); // 체크박스
+  const [activeFilter, setActiveFilter] = useState<string | null>(null); // 선택된 필터링 항목
+  const [filters, setFilters] = useState<{ [key: string]: string[] }>({}); // 필터링 조건 배열
 
   // 전체 선택/해제 핸들러
   const handleSelectAll = () => {
@@ -35,6 +36,29 @@ const Table = () => {
     setActiveFilter(activeFilter === fieldKey ? null : fieldKey);
     console.log('filedKey:', fieldKey);
   };
+
+  // 필터 적용
+  const handleFilterChange = (fieldKey: string, selectedValues: string[]) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [fieldKey]: [...selectedValues],
+    }));
+  };
+
+  // 필터링된 데이터
+  const filteredRecords = records.filter((record) => {
+    return Object.keys(filters).every((key) => {
+      const fieldKey = key as keyof Record; // 타입 명시;;
+      if (!filters[fieldKey] || filters[fieldKey].length === 0) {
+        return true;
+      }
+      return filters[fieldKey].includes(String(record[fieldKey]));
+    });
+  });
+
+  useEffect(() => {
+    console.log('filters 상태 업데이트:', filters);
+  }, [filters]);
 
   return (
     <TableContainer>
@@ -69,11 +93,18 @@ const Table = () => {
                   </FilterIcon>
                   {activeFilter === field.key && (
                     <FilterDropdown
+                      fieldKey={field.key}
                       options={[
                         ...new Set(
                           records.map((data) => String(data[field.key])),
                         ),
-                      ]}
+                      ]} // 중복된 값 제거
+                      selectedFilters={filters[field.key] || []}
+                      onSelectFilter={(fieldKey, selectedValues) => {
+                        console.log('fieldKey:', fieldKey);
+                        console.log('selectedValue:', selectedValues);
+                        handleFilterChange(fieldKey, selectedValues);
+                      }}
                     />
                   )}
                 </TableHeadText>
@@ -83,7 +114,7 @@ const Table = () => {
           </tr>
         </TableHead>
         <TableBody>
-          {records.map((record) => (
+          {filteredRecords.map((record) => (
             <TableRow key={record.id}>
               <TableCell
                 style={{
