@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
@@ -7,6 +8,24 @@ import { fieldsMetadata } from '../types/recode.ts';
 
 const Table = () => {
   const { records } = useRecordStore();
+  const [selected, setSelected] = useState<number[]>([]);
+
+  // 전체 선택/해제 핸들러
+  const handleSelectAll = () => {
+    if (selected.length === records.length) {
+      // 모두 선택되어 있을 떄
+      setSelected([]); // 모든 체크 해제
+    } else {
+      setSelected(records.map((record) => record.id));
+    }
+  };
+
+  // 개별 체크박스 핸들러
+  const handleSelect = (id: number) => {
+    setSelected((check) =>
+      check.includes(id) ? check.filter((item) => item !== id) : [...check, id],
+    );
+  };
 
   return (
     <TableContainer>
@@ -21,7 +40,13 @@ const Table = () => {
         <TableHead>
           <tr>
             <th style={{ justifyItems: 'center' }}>
-              <Checkbox type="checkbox" />
+              <Checkbox
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={
+                  selected.length === records.length && records.length > 0
+                }
+              />
             </th>
             {fieldsMetadata.map((field) => (
               <TableHeadCell key={field.key}>
@@ -49,7 +74,11 @@ const Table = () => {
                   height: '48px',
                 }}
               >
-                <Checkbox type="checkbox" />{' '}
+                <Checkbox
+                  type="checkbox"
+                  onChange={() => handleSelect(record.id)} // 화살표 함수로 즉시 실행 방지(렌더링 시 실행 x)
+                  checked={selected.includes(record.id)}
+                />{' '}
               </TableCell>
               {fieldsMetadata.map((field) => (
                 <TableCell key={field.key}>
