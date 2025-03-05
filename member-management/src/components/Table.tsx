@@ -52,7 +52,16 @@ const Table = () => {
       if (!filters[fieldKey] || filters[fieldKey].length === 0) {
         return true;
       }
-      return filters[fieldKey].includes(String(record[fieldKey]));
+
+      // emailConsent 필드일 경우 true/flase을 '선택됨'/'선택 안함'로 변환
+      const emailValue =
+        fieldKey === 'emailConsent'
+          ? record[fieldKey]
+            ? '선택됨'
+            : '선택 안함'
+          : String(record[fieldKey]);
+
+      return filters[fieldKey].includes(emailValue);
     });
   });
 
@@ -96,7 +105,13 @@ const Table = () => {
                       fieldKey={field.key}
                       options={[
                         ...new Set(
-                          records.map((data) => String(data[field.key])),
+                          records.map((data) =>
+                            field.key === 'emailConsent' // 이메일 수신 동의 필드 값 변환
+                              ? data[field.key]
+                                ? '선택됨'
+                                : '선택 안함'
+                              : String(data[field.key]),
+                          ),
                         ),
                       ]} // 중복된 값 제거
                       selectedFilters={filters[field.key] || []}
