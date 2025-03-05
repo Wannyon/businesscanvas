@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
 
 import { useRecordStore } from '../store/useRecordStore.ts';
 import { fieldsMetadata } from '../types/recode.ts';
+
+import FilterDropdown from '../pages/FilterDropdown.tsx';
 
 const Table = () => {
   const { records } = useRecordStore();
@@ -55,6 +57,13 @@ const Table = () => {
                   <FilterIcon>
                     <FilterAlt sx={{ fontSize: 12, color: 'gray' }} />
                   </FilterIcon>
+                  <FilterDropdown
+                    options={[
+                      ...new Set(
+                        records.map((data) => String(data[field.key])),
+                      ),
+                    ]}
+                  />
                 </TableHeadText>
               </TableHeadCell>
             ))}
