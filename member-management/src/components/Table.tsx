@@ -6,7 +6,7 @@ import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
 import { useRecordStore } from '../store/useRecordStore.ts';
 import { fieldsMetadata, Record } from '../types/recode.ts';
 
-import FilterDropdown from '../pages/FilterDropdown';
+import FilterDropdown from './FilterDropdown.tsx';
 
 const Table = () => {
   const { records } = useRecordStore();
