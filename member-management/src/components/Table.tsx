@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IconButton } from '@mui/material';
-import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
+import { Add, FilterAlt } from '@mui/icons-material';
 
 import { useRecordStore } from '../store/useRecordStore.ts';
 import { fieldsMetadata, Record } from '../types/recode.ts';
@@ -16,6 +15,8 @@ const Table = () => {
   const [activeFilter, setActiveFilter] = useState<string | null>(null); // 선택된 필터링 항목
   const [filters, setFilters] = useState<{ [key: string]: string[] }>({}); // 필터링 조건 배열
   const [openModal, setOpenModal] = useState(false); // 레코드 CRUD 모달
+  const [selectedModifyRecord, setSelectedModifyRecord] =
+    useState<Record | null>(null);
 
   // 전체 선택/해제 핸들러
   const handleSelectAll = () => {
@@ -68,6 +69,18 @@ const Table = () => {
     });
   });
 
+  // 추가 버튼 핸들러
+  const handleAdd = () => {
+    setSelectedModifyRecord(null); // 초기화
+    setOpenModal(true); // 모달 열기
+  };
+
+  // 수정 버튼 클릭 핸들러
+  const handleEdit = (record: Record) => {
+    setSelectedModifyRecord(record);
+    setOpenModal(true);
+  };
+
   // 삭제 버튼 클릭 핸들러
   const handleDelete = (record: Record) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
@@ -85,10 +98,14 @@ const Table = () => {
       <Header>
         <Title>회원 목록</Title>
 
-        <StyledButton onClick={() => setOpenModal(true)}>
+        <StyledButton onClick={handleAdd}>
           <Add fontSize="small" /> 추가
         </StyledButton>
-        <AddRecordModal open={openModal} onClose={() => setOpenModal(false)} />
+        <AddRecordModal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            initialData={selectedModifyRecord} // 수정할 레코드 상태 전달
+        />
       </Header>
       <StyledTable>
         <TableHead>

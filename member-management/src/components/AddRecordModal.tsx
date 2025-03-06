@@ -18,9 +18,10 @@ import { useRecordStore } from '../store/useRecordStore.ts';
 type Props = {
   open: boolean;
   onClose: () => void;
+  initialData: Record | null;
 };
 
-const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
+const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
   const { addRecord } = useRecordStore();
   const [formData, setFormData] = useState<Partial<Record>>({
     name: '',
@@ -32,6 +33,30 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
   });
 
   const [isValid, setIsValid] = useState(false);
+
+  // initialData 변경될 때 formData 초기화
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name || '',
+        address: initialData.address || '',
+        memo: initialData.memo || '',
+        joinedAt: initialData.joinedAt || '',
+        job: initialData.job || '개발자',
+        emailConsent: initialData.emailConsent || false,
+      });
+    } else {
+      // 추가 버튼을 눌렀을 때 빈 값으로 초기화
+      setFormData({
+        name: '',
+        address: '',
+        memo: '',
+        joinedAt: '',
+        job: '개발자',
+        emailConsent: false,
+      });
+    }
+  }, [initialData]);
 
   useEffect(() => {
     // 필수 입력 검사
