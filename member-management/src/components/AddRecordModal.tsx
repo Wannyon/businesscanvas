@@ -19,10 +19,11 @@ type Props = {
   open: boolean;
   onClose: () => void;
   initialData: Record | null;
+  isEdit: boolean;
 };
 
-const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
-  const { addRecord } = useRecordStore();
+const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit }) => {
+  const { addRecord, updateRecord } = useRecordStore();
   const [formData, setFormData] = useState<Partial<Record>>({
     name: '',
     address: '',
@@ -38,6 +39,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
+        id: initialData.id,
         name: initialData.name || '',
         address: initialData.address || '',
         memo: initialData.memo || '',
@@ -48,6 +50,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
     } else {
       // 추가 버튼을 눌렀을 때 빈 값으로 초기화
       setFormData({
+        id: undefined,
         name: '',
         address: '',
         memo: '',
@@ -76,13 +79,30 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
   const handleSave = () => {
     if (!isValid) return;
 
-    addRecord({
-      id: Date.now(),
-      ...formData,
-      joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
-    } as Record);
+    if (isEdit) {
+      console.log('formData:', formData.id);
+
+      updateRecord({
+        id: formData.id,
+        name: formData.name,
+        address: formData.address,
+        memo: formData.memo,
+        joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
+        job: formData.job,
+        emailConsent: formData.emailConsent,
+      } as Record);
+    } else {
+      console.log('formData:', formData);
+
+      addRecord({
+        id: Date.now(),
+        ...formData,
+        joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
+      } as Record);
+    }
 
     setFormData({
+      id: Date.now(),
       name: '',
       address: '',
       memo: '',

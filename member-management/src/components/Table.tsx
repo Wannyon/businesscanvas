@@ -17,6 +17,7 @@ const Table = () => {
   const [openModal, setOpenModal] = useState(false); // 레코드 CRUD 모달
   const [selectedModifyRecord, setSelectedModifyRecord] =
     useState<Record | null>(null);
+  const isEdit = Boolean(selectedModifyRecord); // 수정 상태 여부 확인
 
   // 전체 선택/해제 핸들러
   const handleSelectAll = () => {
@@ -105,6 +106,7 @@ const Table = () => {
             open={openModal}
             onClose={() => setOpenModal(false)}
             initialData={selectedModifyRecord} // 수정할 레코드 상태 전달
+            isEdit={isEdit} // 추가 또는 수정 목적 전달
         />
       </Header>
       <StyledTable>
