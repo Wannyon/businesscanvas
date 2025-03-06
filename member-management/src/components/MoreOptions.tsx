@@ -34,14 +34,14 @@ const MoreOptions: React.FC<Props> = ({ record, onEdit, onDelete }) => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Paper
-          sx={{ display: 'flex', flexDirection: 'column', padding: '8px' }}
+          sx={{ display: 'flex', flexDirection: 'column',paddingLeft: '12px', width: '181px' }}
         >
           <Button
             onClick={() => {
               onEdit(record);
               handleClose();
             }}
-            sx={{ textAlign: 'left', padding: '8px' }}
+            sx={{display: 'flex',justifyContent: 'left', padding: '5px', color: '#000000E0' }}
           >
             수정
           </Button>
@@ -50,7 +50,7 @@ const MoreOptions: React.FC<Props> = ({ record, onEdit, onDelete }) => {
               onDelete(record);
               handleClose();
             }}
-            sx={{ textAlign: 'left', padding: '8px', color: 'red' }}
+            sx={{display: 'flex',justifyContent: 'left', padding: '5px', color: 'red' }}
           >
             삭제
           </Button>
