@@ -23,7 +23,10 @@ jobs:
           cache: 'pnpm'
 
       - name: pnpm 설치
-        run: npm install -g pnpm
+        run: |
+          corepack enable
+          npm install -g pnpm
+          pnpm --version
 
       - name: 의존성 설치 & 빌드
         run: |
