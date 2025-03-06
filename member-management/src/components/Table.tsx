@@ -8,9 +8,10 @@ import { fieldsMetadata, Record } from '../types/recode.ts';
 
 import FilterDropdown from './FilterDropdown.tsx';
 import AddRecordModal from './AddRecordModal.tsx';
+import MoreOptions from './MoreOptions.tsx';
 
 const Table = () => {
-  const { records } = useRecordStore();
+  const { records, deleteRecord } = useRecordStore();
   const [selected, setSelected] = useState<number[]>([]); // 체크박스
   const [activeFilter, setActiveFilter] = useState<string | null>(null); // 선택된 필터링 항목
   const [filters, setFilters] = useState<{ [key: string]: string[] }>({}); // 필터링 조건 배열
@@ -67,10 +68,17 @@ const Table = () => {
     });
   });
 
+  // 삭제 버튼 클릭 핸들러
+  const handleDelete = (record: Record) => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      deleteRecord(record.id);
+    }
+  };
+
   useEffect(() => {
     console.log('filters 상태 업데이트:', filters);
     console.log('activeFilter:', activeFilter);
-  }, [filters]);
+  }, [filters, activeFilter]);
 
   return (
     <TableContainer>
@@ -171,9 +179,7 @@ const Table = () => {
                   justifyContent: 'center',
                 }}
               >
-                <IconButton size="small">
-                  <MoreVert />
-                </IconButton>
+                <MoreOptions record={record} onEdit={handleEdit} onDelete={handleDelete} />
               </TableCell>
             </TableRow>
           ))}
