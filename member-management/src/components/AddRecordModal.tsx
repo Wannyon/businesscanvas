@@ -56,6 +56,15 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
       joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
     } as Record);
 
+    setFormData({
+      name: '',
+      address: '',
+      memo: '',
+      joinedAt: '',
+      job: '개발자',
+      emailConsent: false,
+    });
+
     onClose();
   };
 
