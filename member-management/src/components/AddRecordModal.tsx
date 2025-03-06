@@ -22,7 +22,12 @@ type Props = {
   isEdit: boolean;
 };
 
-const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit }) => {
+const AddRecordModal: React.FC<Props> = ({
+  open,
+  onClose,
+  initialData,
+  isEdit,
+}) => {
   const { addRecord, updateRecord } = useRecordStore();
   const [formData, setFormData] = useState<Partial<Record>>({
     name: '',
@@ -72,7 +77,10 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
     setIsValid(isAllValid);
   }, [formData]);
 
-  const handleChange = <K extends keyof Record>(key: keyof Record, value: Record[K]) => {
+  const handleChange = <K extends keyof Record>(
+    key: keyof Record,
+    value: Record[K],
+  ) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -87,7 +95,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
       joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
       job: formData.job,
       emailConsent: formData.emailConsent,
-    }
+    };
 
     if (isEdit) {
       console.log('formData:', formData.id);
@@ -148,7 +156,10 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
                   <DesktopDatePicker
                     value={formData.joinedAt ? dayjs(formData.joinedAt) : null}
                     onChange={(date) =>
-                        handleChange('joinedAt', date ? date.format('YYYY-MM-DD') : '')
+                      handleChange(
+                        'joinedAt',
+                        date ? date.format('YYYY-MM-DD') : '',
+                      )
                     }
                     slotProps={{
                       popper: {
