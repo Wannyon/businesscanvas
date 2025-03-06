@@ -69,7 +69,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
     setIsValid(isAllValid);
   }, [formData]);
 
-  const handleChange = (key: keyof Record, value: any) => {
+  const handleChange = <K extends keyof Record>(key: keyof Record, value: Record[K]) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -131,7 +131,9 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData }) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
                     value={formData.joinedAt ? dayjs(formData.joinedAt) : null}
-                    onChange={(date) => handleChange('joinedAt', date)}
+                    onChange={(date) =>
+                        handleChange('joinedAt', date ? date.format('YYYY-MM-DD') : '')
+                    }
                     slotProps={{
                       popper: {
                         placement: 'bottom-start', // 입력 필드 아래로 정렬
