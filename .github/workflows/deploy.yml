@@ -23,6 +23,7 @@ jobs:
 
       - name: 의존성 설치 & 빌드
         run: |
+          cd member-management
           pnpm install
           pnpm run build
 
@@ -30,4 +31,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist
+          folder: member-management/dist
