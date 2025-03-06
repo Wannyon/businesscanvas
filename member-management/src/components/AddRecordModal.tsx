@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {
   Button,
   Checkbox,
@@ -70,20 +71,35 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
 
   return (
     <Modal open={open} onClose={onClose}>
-      <div style={{ background: 'white' }}>
-        <form>
+      <ModalContainer>
+        <Header>
+          <h3>회원 추가</h3>
+          <button onClick={onClose}>X</button>
+        </Header>
+        <StyledForm>
           {fieldsMetadata.map((field) => (
-            <div key={field.key}>
+            <InputItem key={field.key}>
               <label>
-                {field.label}{' '}
-                {field.required && <span style={{ color: 'red' }}>*</span>}
+                {field.label} {field.required && <span>*</span>}
               </label>
-              {field.type === 'text' || field.type === 'textarea' ? (
+              {field.type === 'text' ? (
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  maxRows={1}
+                  value={formData[field.key] || ''}
+                  placeholder={'Input'}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                />
+              ) : field.type === 'textarea' ? (
                 <TextField
                   variant="outlined"
                   size="small"
                   multiline={field.type === 'textarea'}
+                  minRows={2}
+                  maxRows={2}
                   value={formData[field.key] || ''}
+                  placeholder={'Textarea'}
                   onChange={(e) => handleChange(field.key, e.target.value)}
                 />
               ) : field.type === 'date' ? (
@@ -95,6 +111,11 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
                       popper: {
                         placement: 'bottom-start', // 입력 필드 아래로 정렬
                       },
+                      textField: {
+                        placeholder: 'Select date',
+                        variant: 'outlined',
+                        size: 'small',
+                      },
                     }}
                   />
                 </LocalizationProvider>
@@ -103,6 +124,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
                   select
                   variant="outlined"
                   size="small"
+                  maxRows={1}
                   value={formData.job || '개발자'}
                   onChange={(e) =>
                     handleChange('job', e.target.value as JobType)
@@ -120,19 +142,21 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
                 <FormControlLabel
                   control={
                     <Checkbox
+                      className={'checkbox'}
                       checked={formData.emailConsent || false}
                       onChange={(e) =>
                         handleChange('emailConsent', e.target.checked)
                       }
                     />
                   }
-                  label={field.label}
+                  label={''}
+                  labelPlacement="end"
                 />
               ) : null}
-            </div>
+            </InputItem>
           ))}
-        </form>
-        <div>
+        </StyledForm>
+        <StyledButtonContainer>
           <Button onClick={onClose} variant="outlined">
             취소
           </Button>
@@ -144,10 +168,83 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
           >
             저장
           </Button>
-        </div>
-      </div>
+        </StyledButtonContainer>
+      </ModalContainer>
     </Modal>
   );
 };
 
 export default AddRecordModal;
+
+const ModalContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 520px;
+  max-height: 700px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 10px;
+  border-bottom: 1px solid #f0f0f0;
+
+  h3 {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  button {
+    background-color: transparent;
+    color: #00000073;
+    border: none;
+
+    &:hover {
+      background-color: #00000005;
+      transition: background-color 0.2s ease-in-out;
+    }
+  }
+`;
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 24px 20px 24px;
+  gap: 20px;
+`;
+
+const InputItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: #00000073;
+  }
+
+  span {
+    color: #ff4d4f;
+  }
+
+  .checkbox {
+    color: #e3e3e3;
+  }
+`;
+
+const StyledButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  gap: 10px;
+`;
