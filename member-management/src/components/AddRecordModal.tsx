@@ -18,10 +18,12 @@ import { useRecordStore } from '../store/useRecordStore.ts';
 type Props = {
   open: boolean;
   onClose: () => void;
+  initialData: Record | null;
+  isEdit: boolean;
 };
 
-const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
-  const { addRecord } = useRecordStore();
+const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit }) => {
+  const { addRecord, updateRecord } = useRecordStore();
   const [formData, setFormData] = useState<Partial<Record>>({
     name: '',
     address: '',
@@ -32,6 +34,32 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
   });
 
   const [isValid, setIsValid] = useState(false);
+
+  // initialData 변경될 때 formData 초기화
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        id: initialData.id,
+        name: initialData.name || '',
+        address: initialData.address || '',
+        memo: initialData.memo || '',
+        joinedAt: initialData.joinedAt || '',
+        job: initialData.job || '개발자',
+        emailConsent: initialData.emailConsent || false,
+      });
+    } else {
+      // 추가 버튼을 눌렀을 때 빈 값으로 초기화
+      setFormData({
+        id: undefined,
+        name: '',
+        address: '',
+        memo: '',
+        joinedAt: '',
+        job: '개발자',
+        emailConsent: false,
+      });
+    }
+  }, [initialData]);
 
   useEffect(() => {
     // 필수 입력 검사
@@ -44,20 +72,33 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
     setIsValid(isAllValid);
   }, [formData]);
 
-  const handleChange = (key: keyof Record, value: any) => {
+  const handleChange = <K extends keyof Record>(key: keyof Record, value: Record[K]) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSave = () => {
     if (!isValid) return;
 
-    addRecord({
-      id: Date.now(),
-      ...formData,
+    const newRecord = {
+      id: formData.id ?? Date.now(), // id가 없으면 생성
+      name: formData.name,
+      address: formData.address,
+      memo: formData.memo,
       joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
-    } as Record);
+      job: formData.job,
+      emailConsent: formData.emailConsent,
+    }
+
+    if (isEdit) {
+      console.log('formData:', formData.id);
+      updateRecord(newRecord as Record);
+    } else {
+      console.log('formData:', formData);
+      addRecord(newRecord as Record);
+    }
 
     setFormData({
+      id: undefined,
       name: '',
       address: '',
       memo: '',
@@ -106,7 +147,9 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
                     value={formData.joinedAt ? dayjs(formData.joinedAt) : null}
-                    onChange={(date) => handleChange('joinedAt', date)}
+                    onChange={(date) =>
+                        handleChange('joinedAt', date ? date.format('YYYY-MM-DD') : '')
+                    }
                     slotProps={{
                       popper: {
                         placement: 'bottom-start', // 입력 필드 아래로 정렬
