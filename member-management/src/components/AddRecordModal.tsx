@@ -7,6 +7,8 @@ import {
   Modal,
   TextField,
 } from '@mui/material';
+import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
 import { fieldsMetadata, JobType, Record } from '../types/recode.ts';
@@ -76,7 +78,17 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose }) => {
                   onChange={(e) => handleChange(field.key, e.target.value)}
                 />
               ) : field.type === 'date' ? (
-                <div></div>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DesktopDatePicker
+                    value={formData.joinedAt ? dayjs(formData.joinedAt) : null}
+                    onChange={(date) => handleChange('joinedAt', date)}
+                    slotProps={{
+                      popper: {
+                        placement: 'bottom-start', // 입력 필드 아래로 정렬
+                      },
+                    }}
+                  />
+                </LocalizationProvider>
               ) : field.type === 'select' ? (
                 <TextField
                   select
