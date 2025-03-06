@@ -79,30 +79,26 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
   const handleSave = () => {
     if (!isValid) return;
 
+    const newRecord = {
+      id: formData.id ?? Date.now(), // id가 없으면 생성
+      name: formData.name,
+      address: formData.address,
+      memo: formData.memo,
+      joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
+      job: formData.job,
+      emailConsent: formData.emailConsent,
+    }
+
     if (isEdit) {
       console.log('formData:', formData.id);
-
-      updateRecord({
-        id: formData.id,
-        name: formData.name,
-        address: formData.address,
-        memo: formData.memo,
-        joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
-        job: formData.job,
-        emailConsent: formData.emailConsent,
-      } as Record);
+      updateRecord(newRecord as Record);
     } else {
       console.log('formData:', formData);
-
-      addRecord({
-        id: Date.now(),
-        ...formData,
-        joinedAt: dayjs(formData.joinedAt).format('YYYY-MM-DD'),
-      } as Record);
+      addRecord(newRecord as Record);
     }
 
     setFormData({
-      id: Date.now(),
+      id: undefined,
       name: '',
       address: '',
       memo: '',
