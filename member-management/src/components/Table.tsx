@@ -6,13 +6,15 @@ import { Add, FilterAlt, MoreVert } from '@mui/icons-material';
 import { useRecordStore } from '../store/useRecordStore.ts';
 import { fieldsMetadata, Record } from '../types/recode.ts';
 
-import FilterDropdown from '../pages/FilterDropdown';
+import FilterDropdown from './FilterDropdown.tsx';
+import AddRecordModal from './AddRecordModal.tsx';
 
 const Table = () => {
   const { records } = useRecordStore();
   const [selected, setSelected] = useState<number[]>([]); // 체크박스
   const [activeFilter, setActiveFilter] = useState<string | null>(null); // 선택된 필터링 항목
   const [filters, setFilters] = useState<{ [key: string]: string[] }>({}); // 필터링 조건 배열
+  const [openModal, setOpenModal] = useState(false); // 레코드 CRUD 모달
 
   // 전체 선택/해제 핸들러
   const handleSelectAll = () => {
@@ -75,9 +77,10 @@ const Table = () => {
       <Header>
         <Title>회원 목록</Title>
 
-        <StyledButton>
+        <StyledButton onClick={() => setOpenModal(true)}>
           <Add fontSize="small" /> 추가
         </StyledButton>
+        <AddRecordModal open={openModal} onClose={() => setOpenModal(false)} />
       </Header>
       <StyledTable>
         <TableHead>
@@ -161,7 +164,13 @@ const Table = () => {
                   )}
                 </TableCell>
               ))}
-              <TableCell>
+              <TableCell
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <IconButton size="small">
                   <MoreVert />
                 </IconButton>
