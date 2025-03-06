@@ -160,6 +160,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
                         size: 'small',
                       },
                     }}
+                    sx={{ margin: '0 auto 0 0' }}
                   />
                 </LocalizationProvider>
               ) : field.type === 'select' ? (
@@ -172,6 +173,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
                   onChange={(e) =>
                     handleChange('job', e.target.value as JobType)
                   }
+                  sx={{ margin: '0 auto 0 0' }}
                 >
                   {(['개발자', 'PO', '디자이너', '인턴'] as JobType[]).map(
                     (option) => (
@@ -200,7 +202,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
           ))}
         </StyledForm>
         <StyledButtonContainer>
-          <Button onClick={onClose} variant="outlined">
+          <Button onClick={onClose} variant="outlined" className="cancel">
             취소
           </Button>
           <Button
@@ -208,6 +210,7 @@ const AddRecordModal: React.FC<Props> = ({ open, onClose, initialData, isEdit })
             onClick={handleSave}
             variant="contained"
             color="primary"
+            className="save"
           >
             저장
           </Button>
@@ -225,7 +228,6 @@ const ModalContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 520px;
-  max-height: 700px;
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -257,17 +259,15 @@ const Header = styled.div`
 `;
 
 const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
   height: 100%;
   padding: 10px 24px 20px 24px;
-  gap: 20px;
 `;
 
 const InputItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 20px;
 
   label {
     font-weight: 600;
@@ -290,4 +290,22 @@ const StyledButtonContainer = styled.div`
   justify-content: flex-end;
   padding: 12px 16px;
   gap: 10px;
+  background: #00000005;
+  border-top: 1px solid #0000000f;
+
+  button {
+    width: 52px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .cancel {
+    color: #000000a6;
+    border-color: #e3e3e3;
+  }
+
+  .save {
+    background-color: #4a7cfe;
+    border-color: #4a7cfe;
+  }
 `;
