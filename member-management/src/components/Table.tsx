@@ -100,13 +100,16 @@ const Table = () => {
         <Title>회원 목록</Title>
 
         <StyledButton onClick={handleAdd}>
-          <Add fontSize="small" /> 추가
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Add fontSize="small" />
+            추가
+          </span>
         </StyledButton>
         <AddRecordModal
-            open={openModal}
-            onClose={() => setOpenModal(false)}
-            initialData={selectedModifyRecord} // 수정할 레코드 상태 전달
-            isEdit={isEdit} // 추가 또는 수정 목적 전달
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          initialData={selectedModifyRecord} // 수정할 레코드 상태 전달
+          isEdit={isEdit} // 추가 또는 수정 목적 전달
         />
       </Header>
       <StyledTable>
@@ -198,7 +201,11 @@ const Table = () => {
                   justifyContent: 'center',
                 }}
               >
-                <MoreOptions record={record} onEdit={handleEdit} onDelete={handleDelete} />
+                <MoreOptions
+                  record={record}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -243,9 +250,11 @@ export const StyledButton = styled.button`
   color: white;
   border: 1px solid #4a7cfe;
   padding: 6px 12px;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
 
   &:hover {
     background: #739fff;
