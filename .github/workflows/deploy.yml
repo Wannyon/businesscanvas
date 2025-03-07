@@ -61,3 +61,6 @@ jobs:
           branch: gh-pages
           folder: member-management/dist
           token: ${{ secrets.GITHUB_TOKEN }}
+          clean: true # 이전 배포 파일 정리
+          single-commit: true # 하나의 커밋으로 유지 (이전 히스토리 삭제)
+          commit-message: "Deploying to GitHub Pages"
