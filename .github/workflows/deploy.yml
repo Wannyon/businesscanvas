@@ -51,6 +51,7 @@ jobs:
 
       - name: TypeScript Compilation
         run: |
+          cd member-management
           pnpm tsc
           pnpm build
 
